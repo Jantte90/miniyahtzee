@@ -1,9 +1,9 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Home from './Home';
-import Gameboard from './Gameboard';
-import Scoreboard from './Scoreboard';  // Assuming you'll have a Scoreboard.js
+import Home from './components/Home';
+import Gameboard from './components/Gameboard';
+import Scoreboard from './components/Scoreboard';
 
 const Tab = createBottomTabNavigator();
 
