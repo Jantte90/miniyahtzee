@@ -13,9 +13,12 @@ export default function Home({ navigation }) {
         onChangeText={setName}
         style={styles.input}
       />
-      <Button title="OK" onPress={() => {
-        navigation.navigate('Gameboard', { playerName: name });
-      }} />
+      <Button 
+          title="OK" 
+          onPress={() => {
+              navigation.navigate('Gameboard', { playerName: name });
+          }} 
+      />
     </View>
   );
 }

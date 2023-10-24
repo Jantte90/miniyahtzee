@@ -1,5 +1,3 @@
-
-
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
@@ -8,7 +6,6 @@ export default function Scoreboard() {
     <View style={styles.container}>
       <Text style={styles.title}>Scoreboard</Text>
       {/* You can expand upon this and list scores, players, etc. */}
-      <Text>Player: Score</Text>  // Placeholder
     </View>
   );
 }

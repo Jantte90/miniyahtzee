@@ -5,7 +5,7 @@ export default StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F2F2F2',  // Some light background color
+    backgroundColor: '#F2F2F2',
   },
   input: {
     borderWidth: 1,
