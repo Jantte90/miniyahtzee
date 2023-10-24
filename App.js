@@ -12,8 +12,16 @@ export default function App() {
     <NavigationContainer>
       <Tab.Navigator>
         <Tab.Screen name="Home" component={Home} />
-        <Tab.Screen name="Gameboard" component={Gameboard} />
-        <Tab.Screen name="Scoreboard" component={Scoreboard} />
+        <Tab.Screen
+          name="Gameboard"
+          component={Gameboard}
+          initialParams={{ playerName: '' }} // Initialize playerName as empty string
+        />
+        <Tab.Screen
+          name="Scoreboard"
+          component={Scoreboard}
+          initialParams={{ gameScores: [] }} // Initialize gameScores as an empty array
+        />
       </Tab.Navigator>
     </NavigationContainer>
   );

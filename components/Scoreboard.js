@@ -1,24 +1,22 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, FlatList } from 'react-native';
 
-export default function Scoreboard() {
+export default function Scoreboard({ route }) {
+  const { gameScores } = route.params;
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Scoreboard</Text>
-      {/* You can expand upon this and list scores, players, etc. */}
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Scoreboard</Text>
+      <FlatList
+        data={gameScores}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item }) => (
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20 }}>
+            <Text>{item.playerName}</Text>
+            <Text>{item.totalScore}</Text>
+          </View>
+        )}
+      />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#f5f5f5',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-});

@@ -1,49 +1,179 @@
-import React, { useState } from 'react';
-import { View, Text, Button, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, Button, ScrollView } from 'react-native';
+import styles from '../styles/style';
 
-export default function Gameboard({ route }) {
+const NBR_OF_DICES = 5;
+const NBR_OF_THROWS = 3;
+const MIN_SPOT = 1;
+const MAX_SPOT = 6;
+const BONUS_POINTS_LIMIT = 63;
+const BONUS_POINTS = 35;
+
+export default function Gameboard({ route, navigation }) {
   const { playerName } = route.params;
 
-  const [dices, setDices] = useState(Array(5).fill(1));
-  const [selectedDices, setSelectedDices] = useState([]);
-  const [throwsLeft, setThrowsLeft] = useState(3);
+  const [dices, setDices] = useState(Array(NBR_OF_DICES).fill(0));
+  const [throwsLeft, setThrowsLeft] = useState(NBR_OF_THROWS);
+  const [scores, setScores] = useState({
+    [MIN_SPOT]: null,
+    [MIN_SPOT + 1]: null,
+    [MIN_SPOT + 2]: null,
+    [MIN_SPOT + 3]: null,
+    [MIN_SPOT + 4]: null,
+    [MIN_SPOT + 5]: null,
+  });
+  const [totalScore, setTotalScore] = useState(0);
+  const [gameScores, setGameScores] = useState([]);
+  const [gameEnded, setGameEnded] = useState(false);
+
+  useEffect(() => {
+    calculateTotalScore();
+  }, [scores]);
 
   const rollDice = () => {
-    if (throwsLeft === 0) return;
+    if (throwsLeft === 0 || gameEnded) return;
 
     let newDices = dices.map((dice, index) => {
-      if (selectedDices.includes(index)) {
-        return dice;
+      if (dice === 0) {
+        return Math.floor(Math.random() * 6) + 1;
       }
-      return Math.floor(Math.random() * 6) + 1;
+      return dice;
     });
-
     setDices(newDices);
-    setThrowsLeft(prev => prev - 1);
+    setThrowsLeft((prev) => prev - 1);
   };
 
-  const selectDice = (index) => {
-    setSelectedDices(prev => {
-      if (prev.includes(index)) {
-        return prev.filter(i => i !== index);
-      } else {
-        return [...prev, index];
+  const toggleDice = (index) => {
+    if (throwsLeft > 0 && !gameEnded) {
+      let newDices = [...dices];
+      newDices[index] = newDices[index] === 0 ? Math.floor(Math.random() * 6) + 1 : 0;
+      setDices(newDices);
+    }
+  };
+
+  const calculateScore = (spot) => {
+    if (scores[spot] !== null || gameEnded) return;
+
+    const count = dices.filter((dice) => dice === spot).length;
+    const score = count * spot;
+
+    setScores((prevScores) => ({
+      ...prevScores,
+      [spot]: score,
+    }));
+
+    setThrowsLeft(NBR_OF_THROWS);
+    // Reset the dice to '?'
+    setDices(Array(NBR_OF_DICES).fill(0));
+
+    // Check if the game should end
+    const filledSpots = Object.values(scores).filter((score) => score !== null);
+    if (filledSpots.length === MAX_SPOT - MIN_SPOT + 1) {
+      setGameEnded(true);
+    }
+  };
+
+  const calculateTotalScore = () => {
+    const spots = Array.from({ length: MAX_SPOT - MIN_SPOT + 1 }, (_, index) => MIN_SPOT + index);
+    let total = 0;
+
+    for (const spot of spots) {
+      if (scores[spot] !== null) {
+        total += scores[spot];
       }
+    }
+
+    if (total >= BONUS_POINTS_LIMIT) {
+      total += BONUS_POINTS;
+    }
+
+    setTotalScore(total);
+  };
+
+  const saveGameScore = () => {
+    if (totalScore === 0) return; // Only save if there is a score
+
+    const newGameScores = [
+      ...gameScores,
+      {
+        playerName: playerName,
+        totalScore: totalScore,
+      },
+    ];
+
+    setGameScores(newGameScores);
+  };
+
+  const resetGame = () => {
+    setDices(Array(NBR_OF_DICES).fill(0));
+    setThrowsLeft(NBR_OF_THROWS);
+    setScores({
+      [MIN_SPOT]: null,
+      [MIN_SPOT + 1]: null,
+      [MIN_SPOT + 2]: null,
+      [MIN_SPOT + 3]: null,
+      [MIN_SPOT + 4]: null,
+      [MIN_SPOT + 5]: null,
     });
+    setTotalScore(0);
+    setGameEnded(false);
   };
 
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.title}>Yahtzee Game</Text>
       <Text>Welcome, {playerName}!</Text>
-      <View style={{ flexDirection: 'row', marginVertical: 20 }}>
+      <View style={styles.diceContainer}>
         {dices.map((dice, index) => (
-          <TouchableOpacity key={index} onPress={() => selectDice(index)} style={{ marginHorizontal: 10, padding: 20, borderColor: selectedDices.includes(index) ? 'blue' : 'gray', borderWidth: 2 }}>
-            <Text>{dice}</Text>
+          <TouchableOpacity
+            key={index}
+            style={[styles.dice, { backgroundColor: dice === 0 ? 'lightgray' : 'white' }]}
+            onPress={() => toggleDice(index)}
+            disabled={throwsLeft === 0 || gameEnded}
+          >
+            <Text style={styles.diceText}>{dice === 0 ? '?' : dice}</Text>
           </TouchableOpacity>
         ))}
       </View>
       <Text>Throws Left: {throwsLeft}</Text>
-      <Button title="Throw Dice" onPress={rollDice} />
-    </View>
+      <Button title="Roll Dice" onPress={rollDice} disabled={throwsLeft === 0 || gameEnded} />
+      <View style={styles.scoreButtonsContainer}>
+        {Object.keys(scores).map((spot) => (
+          <TouchableOpacity
+            key={spot}
+            style={[
+              styles.scoreButton,
+              {
+                backgroundColor: gameEnded ? 'lightgray' : scores[spot] === null ? 'white' : 'lightgreen',
+              },
+            ]}
+            onPress={() => calculateScore(Number(spot))}
+            disabled={scores[spot] !== null || gameEnded}
+          >
+            <Text style={styles.scoreButtonText}>{spot}</Text>
+          </TouchableOpacity>
+        ))}
+        <TouchableOpacity
+          style={[
+            styles.scoreButton,
+            { backgroundColor: gameEnded ? 'lightgray' : 'white' },
+          ]}
+          onPress={saveGameScore}
+          disabled={!gameEnded}
+        >
+          <Text style={styles.scoreButtonText}>Save Points</Text>
+        </TouchableOpacity>
+      </View>
+      <Text>Total Score: {totalScore}</Text>
+      <Button title="Reset Game" onPress={resetGame} />
+      <Button
+        title="Go to Scoreboard"
+        onPress={() =>
+          navigation.navigate('Scoreboard', {
+            gameScores: gameScores,
+          })
+        }
+      />
+    </ScrollView>
   );
 }
