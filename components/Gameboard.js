@@ -133,7 +133,7 @@ export default function Gameboard({ route, navigation }) {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Mini Yahtzee Game</Text>
+      <Text style={styles.title}>Yahtzee Game</Text>
       <Text>Welcome, {playerName}!</Text>
       <View style={styles.diceContainer}>
         {dices.map((dice, index) => (
@@ -171,11 +171,10 @@ export default function Gameboard({ route, navigation }) {
         onPress={saveGameScore}
         disabled={totalScore === 0}
       >
-        <Text style={styles.scoreButtonText}>Save current score</Text>
+        <Text style={styles.scoreButtonText}>Save score</Text>
       </TouchableOpacity>
       <Text>Total Score: {totalScore}</Text>
       <Button title="Reset Game" onPress={resetGame} />
-      <Button title="Clear Scores" onPress={clearScores} />
     </ScrollView>
   );
 }

@@ -41,16 +41,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
- 
+
+  
   centeredButton: {
-    width: 150, 
-    height: 60, 
-    backgroundColor: '#3498db', 
-    borderRadius: 10, 
+    width: 150,
+    height: 60,
+    backgroundColor: '#3498db',
+    borderRadius: 10,
   },
-  resetButton: {
-    backgroundColor: 'lightgray', 
-  },
+  
 });
 
 export default styles;
