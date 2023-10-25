@@ -1,59 +1,56 @@
+import { useFocusEffect } from '@react-navigation/native';
 import { StyleSheet } from 'react-native';
 
-export default StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F2F2F2', // Some light background color
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#333',
-    padding: 10,
-    width: '80%',
-    marginBottom: 10,
+    justifyContent: 'center',
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
+    marginBottom: 16,
   },
   diceContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
-    marginBottom: 10,
+    marginBottom: 16,
   },
   dice: {
     width: 60,
     height: 60,
-    borderRadius: 30,
-    borderWidth: 2,
-    borderColor: 'black',
-    justifyContent: 'center',
+    borderRadius: 8,
+    margin: 4,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   diceText: {
     fontSize: 24,
   },
   scoreButtonsContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     flexWrap: 'wrap',
-    marginTop: 20,
+    justifyContent: 'center',
+    marginBottom: 16,
   },
   scoreButton: {
-    width: '30%',
-    backgroundColor: 'white',
-    marginBottom: 10,
+    width: 55,
+    height: 55,
+    borderRadius: 4,
+    margin: 4,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: '#333',
-    padding: 10,
   },
-  scoreButtonText: {
-    fontSize: 18,
-    fontWeight: 'bold',
+ 
+  centeredButton: {
+    width: 150, 
+    height: 60, 
+    backgroundColor: '#3498db', 
+    borderRadius: 10, 
+  },
+  resetButton: {
+    backgroundColor: 'lightgray', 
   },
 });
+
+export default styles;

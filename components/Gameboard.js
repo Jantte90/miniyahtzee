@@ -102,9 +102,18 @@ export default function Gameboard({ route, navigation }) {
     ];
 
     setGameScores(newGameScores);
-    
+
     // Reset the game after saving the score
     resetGame();
+
+    // Navigate to the Scoreboard screen
+    navigation.navigate('Scoreboard', {
+      gameScores: newGameScores, // Pass the updated scores
+    });
+  };
+
+  const clearScores = () => {
+    setGameScores([]);
   };
 
   const resetGame = () => {
@@ -124,7 +133,7 @@ export default function Gameboard({ route, navigation }) {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Yahtzee Game</Text>
+      <Text style={styles.title}>Mini Yahtzee Game</Text>
       <Text>Welcome, {playerName}!</Text>
       <View style={styles.diceContainer}>
         {dices.map((dice, index) => (
@@ -156,26 +165,17 @@ export default function Gameboard({ route, navigation }) {
             <Text style={styles.scoreButtonText}>{spot}</Text>
           </TouchableOpacity>
         ))}
-        {gameEnded && (
-          <TouchableOpacity
-            style={styles.scoreButton}
-            onPress={saveGameScore}
-            disabled={totalScore === 0}
-          >
-            <Text style={styles.scoreButtonText}>Save Points</Text>
-          </TouchableOpacity>
-        )}
       </View>
+      <TouchableOpacity
+        style={[styles.scoreButton, styles.centeredButton]}
+        onPress={saveGameScore}
+        disabled={totalScore === 0}
+      >
+        <Text style={styles.scoreButtonText}>Save current score</Text>
+      </TouchableOpacity>
       <Text>Total Score: {totalScore}</Text>
       <Button title="Reset Game" onPress={resetGame} />
-      <Button
-        title="Go to Scoreboard"
-        onPress={() =>
-          navigation.navigate('Scoreboard', {
-            gameScores: gameScores,
-          })
-        }
-      />
+      <Button title="Clear Scores" onPress={clearScores} />
     </ScrollView>
   );
 }
