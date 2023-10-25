@@ -102,6 +102,9 @@ export default function Gameboard({ route, navigation }) {
     ];
 
     setGameScores(newGameScores);
+    
+    // Reset the game after saving the score
+    resetGame();
   };
 
   const resetGame = () => {
@@ -153,16 +156,15 @@ export default function Gameboard({ route, navigation }) {
             <Text style={styles.scoreButtonText}>{spot}</Text>
           </TouchableOpacity>
         ))}
-        <TouchableOpacity
-          style={[
-            styles.scoreButton,
-            { backgroundColor: gameEnded ? 'lightgray' : 'white' },
-          ]}
-          onPress={saveGameScore}
-          disabled={!gameEnded}
-        >
-          <Text style={styles.scoreButtonText}>Save Points</Text>
-        </TouchableOpacity>
+        {gameEnded && (
+          <TouchableOpacity
+            style={styles.scoreButton}
+            onPress={saveGameScore}
+            disabled={totalScore === 0}
+          >
+            <Text style={styles.scoreButtonText}>Save Points</Text>
+          </TouchableOpacity>
+        )}
       </View>
       <Text>Total Score: {totalScore}</Text>
       <Button title="Reset Game" onPress={resetGame} />
